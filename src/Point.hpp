@@ -5,6 +5,7 @@
 
 struct Point
 {
+    // TODO remove
     std::string ToString() const;
 
     int x;
