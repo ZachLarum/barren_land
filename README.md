@@ -14,6 +14,13 @@ Output
 
 Output all the fertile land area in square meters, sorted from smallest area to greatest, separated by a space. 
 
+## PreReqs
+-cmake
+
+-gtest
+
+
+
 ## Breakdown
 There are two main challenges to the this problem. The first is adding the barren land. The second is adding up of the fertile area(s).
 
@@ -40,6 +47,12 @@ Do I have to follow the sample output format or can I choose my own?
 How many plots can I recieve as input?
 
 Would we ever want to change the size of the farm?
+
+Throw upon having a top right coordinate below or to the left of a bottom left coordinate?
+
+What happens if there is more than a single space between arguments?
+
+What happens if there are formatting issues with the input?
 
 
 
