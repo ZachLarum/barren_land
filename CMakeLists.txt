@@ -7,8 +7,6 @@ project(barren-land
         CXX
 )
 
-#include(GNUInstallDirs)
-
 enable_testing()
 
 add_subdirectory("src")
