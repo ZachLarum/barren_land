@@ -7,6 +7,10 @@
 #include <vector>
 #include <sstream>
 #include <cmath>
+#include <queue>
+
+// Questions
+// If I enter 5 5 5 5, does that mean 1 plot is infertile?
 
 namespace
 {
@@ -26,13 +30,22 @@ void PromptUser()
 {
     std::cout << "Enter barren plots" << std::endl;
 }
+
+enum class SoilStatus
+{
+    OutOfBounds,
+    Fertile,
+    Checked,
+    Infertile,
+};
+
 }
 
 class FarmingLand
 {
 public:
     FarmingLand(size_t height, size_t width)
-    : land{std::vector<std::vector<int>>(height, std::vector<int>(width, 1))}
+    : land{std::vector<std::vector<SoilStatus>>(height, std::vector<SoilStatus>(width, SoilStatus::Fertile))}
     {
         if(height == 0 || width == 0)
         {
@@ -54,12 +67,32 @@ public:
         {
             for(auto x = plotLeft; x <= plotRight; ++x)
             {
-                land[y][x] = 0;
+                land[y][x] = SoilStatus::Infertile;
             }
         }
     };
 
-    std::vector<std::vector<int>> Land() const
+
+    std::vector<size_t> FertilePlots()
+    {
+        auto fertilePlots = std::vector<size_t>{};
+
+        for(size_t y = 0; y < Height(); ++y)
+        {
+            for(size_t x = 0; x < Width(); ++x)
+            {
+                if(land[y][x] == SoilStatus::Fertile)
+                {
+                    auto plotSize = FindSizeOfPlot(Point{static_cast<int>(x), static_cast<int>(y)});
+                    fertilePlots.emplace_back(plotSize);
+                }
+            }
+        }
+
+        return fertilePlots;
+    }
+
+    std::vector<std::vector<SoilStatus>> Land() const
     {
         return land;
     }
@@ -73,7 +106,77 @@ private:
     {
         return land.size();
     }
-    std::vector<std::vector<int>> land;
+
+    bool IsPointInBounds(const Point& loc)
+    {
+        return loc.x >= 0 && loc.x < Width() && loc.y >= 0 && loc.y < Height();
+    }
+
+    SoilStatus GetSoilStatus(const Point& loc)
+    {
+        if(IsPointInBounds(loc))
+        {
+            return land[loc.y][loc.x];
+        }
+        return SoilStatus::OutOfBounds;
+    }
+
+    void SetSoilStatus(const Point& loc, SoilStatus status)
+    {
+        if(IsPointInBounds(loc))
+        {
+            land[loc.y][loc.x] = status;
+        }
+    }
+
+    std::vector<Point> FindSurroudingFertilePoints(const Point& loc)
+        {
+            auto left = Point{loc.x - 1, loc.y};
+            auto right = Point{loc.x + 1, loc.y};
+            auto down = Point{loc.x, loc.y - 1};
+            auto up = Point{loc.x, loc.y + 1};
+
+            auto surroundingPlots = std::vector<Point>{left, right, up, down};
+            auto fertilePlots = std::vector<Point>{};
+            for (const auto& plot : surroundingPlots)
+            {
+                if(GetSoilStatus(plot) == SoilStatus::Fertile)
+                {
+                    SetSoilStatus(plot, SoilStatus::Checked);
+                    fertilePlots.emplace_back(plot);
+                }
+            }
+            return fertilePlots;
+        }
+
+    size_t FindSizeOfPlot(const Point& loc)
+    {
+        auto plotSize = size_t{0};
+        auto queue = std::queue<Point>{};
+
+        queue.emplace(loc);
+
+        while(!queue.empty())
+        {
+            auto currentLoc = queue.front();
+            queue.pop();
+            auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
+
+            plotSize += fertilePlots.size();
+
+            for(const auto& plot : fertilePlots)
+            {
+                queue.emplace(plot);
+            }
+        }
+
+        return plotSize;
+
+    }
+
+
+
+    std::vector<std::vector<SoilStatus>> land;
 };
 
 void PrintFarm(const FarmingLand& land)
@@ -83,7 +186,7 @@ void PrintFarm(const FarmingLand& land)
     {
         for(auto& row : col)
         {
-            std::cout << row << " ";
+            std::cout << (row == SoilStatus::Fertile) << " ";
         }
         std::cout << "\n";
     }
@@ -106,6 +209,13 @@ int main()
         farm.AddBarrenPlot(plot);
     }
     PrintFarm(farm);
+    auto plots = farm.FertilePlots();
+
+    std::cout << "Fertile plots " << std::endl;
+    for (const auto& plot : plots)
+    {
+        std::cout << "\t" << plot << std::endl;
+    }
 
 
 }
