@@ -68,12 +68,12 @@ int FarmLand::Height() const
     return land.size();
 }
 
-bool FarmLand::IsPointInBounds(const Point& loc)
+bool FarmLand::IsPointInBounds(const Point& loc) const
 {
     return loc.x >= 0 && loc.x < Width() && loc.y >= 0 && loc.y < Height();
 }
 
-SoilStatus FarmLand::GetSoilStatus(const Point& loc)
+SoilStatus FarmLand::GetSoilStatus(const Point& loc) const
 {
     if(IsPointInBounds(loc))
     {

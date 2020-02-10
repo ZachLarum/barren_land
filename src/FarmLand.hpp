@@ -24,22 +24,21 @@ public:
 
     std::vector<size_t> FertilePlots();
 
+    //TODO Remove this function
     std::vector<std::vector<SoilStatus>> Land() const;
 
 private:
     int Height() const;
-
     int Width() const;
 
-    bool IsPointInBounds(const Point& loc);
+    bool IsPointInBounds(const Point& loc) const;
 
-    SoilStatus GetSoilStatus(const Point& loc);
-
+    SoilStatus GetSoilStatus(const Point& loc) const;
     void SetSoilStatus(const Point& loc, SoilStatus status);
 
-    std::vector<Point> FindSurroudingFertilePoints(const Point& loc);
-
     size_t FindSizeOfPlot(const Point& loc);
+
+    std::vector<Point> FindSurroudingFertilePoints(const Point& loc);
 
     std::vector<std::vector<SoilStatus>> land;
 };

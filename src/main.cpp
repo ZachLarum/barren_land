@@ -30,7 +30,6 @@ void PrintPlots(const std::vector<size_t>& plots)
     std::cout << std::endl;
 }
 
-
 // TODO remove
 void PrintFarm(const FarmLand& land)
 {
@@ -46,11 +45,11 @@ void PrintFarm(const FarmLand& land)
 }
 }
 
-
 int main()
 {
     PromptUser();
 
+    // TODO Catch exceptions, display message, and reprompt.
     auto barrenPlots = parse::ParseInput();
     auto farm = FarmLand(10, 10);
 
