@@ -6,9 +6,6 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
-#include <sstream>
-#include <cmath>
-#include <queue>
 
 // Questions
 // If I enter 5 5 5 5, does that mean 1 plot is infertile?
@@ -31,14 +28,14 @@ void PrintPlots(const std::vector<size_t>& plots)
 }
 
 // TODO remove
-void PrintFarm(const FarmLand& land)
+void PrintFarm(const common::FarmLand& land)
 {
     auto l =  land.Land();
     for(auto& col : l)
     {
         for(auto& row : col)
         {
-            std::cout << (row == SoilStatus::Fertile) << " ";
+            std::cout << (row == common::SoilStatus::Fertile) << " ";
         }
         std::cout << "\n";
     }
@@ -50,8 +47,8 @@ int main()
     PromptUser();
 
     // TODO Catch exceptions, display message, and reprompt.
-    auto barrenPlots = parse::ParseInput();
-    auto farm = FarmLand(10, 10);
+    auto barrenPlots = common::ParseInput();
+    auto farm = common::FarmLand(10, 10);
 
     for(const auto& plot : barrenPlots)
     {

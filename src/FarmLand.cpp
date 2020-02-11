@@ -1,31 +1,37 @@
 #include "FarmLand.hpp"
 
-#include <queue>
-#include <stdexcept>
 #include <algorithm>
+#include <queue>
+#include <sstream>
+#include <stdexcept>
+
+namespace common
+{
 
 FarmLand::FarmLand(size_t height, size_t width)
 : land{std::vector<std::vector<SoilStatus>>(height, std::vector<SoilStatus>(width, SoilStatus::Fertile))}
 {
     if(height == 0 || width == 0)
     {
-        throw std::runtime_error(std::string{"Incorrect dimensions entered."
-                " Farm must have a height of at least 1 and a width of at least 1."} +
-                " Height: " + std::to_string(height) +
-                " Width: " + std::to_string(width));
+        std::ostringstream errMsg;
+        errMsg << "Incorrect dimensions entered."
+               << " Farm must have a height of at least 1 and a width of at least 1.\n"
+               << " Height: " << height
+               << " Width: " << width << "\n";
+        throw std::runtime_error(errMsg.str());
     }
 }
 
 void FarmLand::AddBarrenPlot(const Rectangle& plot)
 {
-    auto plotTop = std::min(plot.Top(), Height() - 1);
+    auto plotTop = std::min(plot.Top(), Height());
     auto plotBottom = std::max(plot.Bottom(), 0);
     auto plotLeft = std::max(plot.Left(), 0);
-    auto plotRight = std::min(plot.Right(), Width() - 1);
+    auto plotRight = std::min(plot.Right(), Width());
 
-    for(auto y = plotBottom; y <= plotTop; ++y)
+    for(auto y = plotBottom; y < plotTop; ++y)
     {
-        for(auto x = plotLeft; x <= plotRight; ++x)
+        for(auto x = plotLeft; x < plotRight; ++x)
         {
             land[y][x] = SoilStatus::Infertile;
         }
@@ -132,5 +138,5 @@ size_t FarmLand::FindSizeOfPlot(const Point& loc)
     }
 
     return plotSize;
-
+}
 }

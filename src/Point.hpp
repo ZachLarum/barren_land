@@ -3,13 +3,15 @@
 
 #include <string>
 
-struct Point
+namespace common
 {
-    // TODO remove
-    std::string ToString() const;
-
+struct Point final
+{
     int x;
     int y;
 };
+}
+
+std::ostream& operator << (std::ostream& os, const common::Point& p);
 
 #endif
