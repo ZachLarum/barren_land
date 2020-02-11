@@ -1,10 +1,8 @@
 #include "Point.hpp"
 
 #include <sstream>
-// TODO remove file
-std::string Point::ToString() const
+
+std::ostream& operator << (std::ostream& os, const common::Point& p)
 {
-    std::ostringstream oss;
-    oss << "(" << x << ", " << y << ")";
-    return oss.str();
+    return os << "(" << p.x << "," << p.y << ")";
 }

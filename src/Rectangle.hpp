@@ -3,12 +3,12 @@
 
 #include "Point.hpp"
 
-class Rectangle
+namespace common
+{
+class Rectangle final
 {
 public:
     Rectangle(Point corner1, Point corner2);
-
-    Rectangle(int x1, int y1, int x2, int y2);
 
     int Top() const;
     int Bottom() const;
@@ -25,6 +25,7 @@ private:
     int left;
     int right;
 };
+}
 
 #endif
 

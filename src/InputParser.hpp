@@ -3,10 +3,10 @@
 
 #include <vector>
 
+namespace common
+{
 struct Rectangle;
 
-namespace parse
-{
 std::vector<Rectangle> ParseInput();
 }
 
