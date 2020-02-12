@@ -1,4 +1,5 @@
 #include "FarmLand.hpp"
+#include "Exception.hpp"
 
 #include <algorithm>
 #include <queue>
@@ -7,19 +8,11 @@
 
 namespace common
 {
-
-FarmLand::FarmLand(size_t height, size_t width)
-: land{std::vector<std::vector<SoilStatus>>(height, std::vector<SoilStatus>(width, SoilStatus::Fertile))}
+FarmLand::FarmLand(Point corner1, Point corner2)
+  : Rectangle(corner1, corner2),
+    land{std::vector<std::vector<SoilStatus>>(std::abs(corner1.y - corner2.y),
+        std::vector<SoilStatus>(std::abs(corner1.x - corner2.x), SoilStatus::Fertile))}
 {
-    if(height == 0 || width == 0)
-    {
-        std::ostringstream errMsg;
-        errMsg << "Incorrect dimensions entered."
-               << " Farm must have a height of at least 1 and a width of at least 1.\n"
-               << " Height: " << height
-               << " Width: " << width << "\n";
-        throw std::runtime_error(errMsg.str());
-    }
 }
 
 void FarmLand::AddBarrenPlot(const Rectangle& plot)

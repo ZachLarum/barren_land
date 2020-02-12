@@ -17,17 +17,16 @@ enum class SoilStatus
     Infertile,
 };
 
-class FarmLand
+class FarmLand : Rectangle
 {
 public:
-    FarmLand(size_t height, size_t width);
+    FarmLand(Point corner1, Point corner2);
 
     void AddBarrenPlot(const common::Rectangle& plot);
 
     std::vector<size_t> FertilePlots();
 
     std::vector<std::vector<SoilStatus>> Land() const;
-
 private:
     int Height() const;
     int Width() const;

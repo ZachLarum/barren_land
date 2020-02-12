@@ -1,5 +1,7 @@
 #include "Rectangle.hpp"
+#include "Exception.hpp"
 
+#include <sstream>
 
 namespace common
 {
@@ -9,6 +11,21 @@ Rectangle::Rectangle(Point corner1, Point corner2)
   right{FindRight(corner1.x, corner2.x)},
   left{FindLeft(corner1.x, corner2.x)}
 {
+    if(top == bottom || right == left)
+    {
+        std::ostringstream errMsg;
+        errMsg << "Invalid points received for a Rectangle:\n"
+               << "Point 1: " << corner1 << ", Point 2: " << corner2 << "\n";
+        if (right == left)
+        {
+            errMsg << "\tBoth x coordinates are the same.\n";
+        }
+        if (top == bottom)
+        {
+            errMsg << "\tBoth y coordinates are the same.\n";
+        }
+        throw Exception(errMsg.str());
+    }
 }
 
 int Rectangle::Top() const

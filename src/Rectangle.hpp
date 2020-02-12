@@ -5,7 +5,7 @@
 
 namespace common
 {
-class Rectangle final
+class Rectangle
 {
 public:
     Rectangle(Point corner1, Point corner2);
