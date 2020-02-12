@@ -17,7 +17,7 @@ enum class SoilStatus
     Infertile,
 };
 
-class FarmLand : Rectangle
+class FarmLand : public Rectangle
 {
 public:
     FarmLand(Point corner1, Point corner2);
@@ -41,6 +41,8 @@ private:
     std::vector<common::Point> FindSurroudingFertilePoints(const common::Point& loc);
 
     std::vector<std::vector<SoilStatus>> land;
+    int xOffset;
+    int yOffset;
 };
 }
 

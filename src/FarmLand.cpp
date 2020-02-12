@@ -11,16 +11,18 @@ namespace common
 FarmLand::FarmLand(Point corner1, Point corner2)
   : Rectangle(corner1, corner2),
     land{std::vector<std::vector<SoilStatus>>(std::abs(corner1.y - corner2.y),
-        std::vector<SoilStatus>(std::abs(corner1.x - corner2.x), SoilStatus::Fertile))}
+        std::vector<SoilStatus>(std::abs(corner1.x - corner2.x), SoilStatus::Fertile))},
+    xOffset{std::min(corner1.x, corner2.x)},
+    yOffset{std::min(corner1.y, corner2.y)}
 {
 }
 
 void FarmLand::AddBarrenPlot(const Rectangle& plot)
 {
-    auto plotTop = std::min(plot.Top(), Height());
-    auto plotBottom = std::max(plot.Bottom(), 0);
-    auto plotLeft = std::max(plot.Left(), 0);
-    auto plotRight = std::min(plot.Right(), Width());
+    auto plotTop = std::min(plot.Top() - yOffset, Height());
+    auto plotBottom = std::max(plot.Bottom() - yOffset, 0);
+    auto plotLeft = std::max(plot.Left() - xOffset, 0);
+    auto plotRight = std::min(plot.Right() - xOffset, Width());
 
     for(auto y = plotBottom; y < plotTop; ++y)
     {
