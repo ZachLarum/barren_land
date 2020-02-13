@@ -1,11 +1,10 @@
 #include "FarmLand.hpp"
 #include "InputParser.hpp"
 #include "Point.hpp"
-#include "Rectangle.hpp"
-
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include "Land.hpp"
 
 // Questions
 // If I enter 5 5 5 5, does that mean 1 plot is infertile?

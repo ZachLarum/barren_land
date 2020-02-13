@@ -12,7 +12,7 @@ target_sources(farm-land-unit-tests
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/FarmLandTests.cpp
         ${PROJECT_SOURCE_DIR}/src/Point.cpp
-        ${PROJECT_SOURCE_DIR}/src/Rectangle.cpp
+        ${PROJECT_SOURCE_DIR}/src/Land.cpp
 )
 
 target_include_directories(farm-land-unit-tests
@@ -45,7 +45,7 @@ target_sources(input-parser-unit-tests
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/InputParserTests.cpp
         ${PROJECT_SOURCE_DIR}/src/Point.cpp
-        ${PROJECT_SOURCE_DIR}/src/Rectangle.cpp
+        ${PROJECT_SOURCE_DIR}/src/Land.cpp
         ${PROJECT_SOURCE_DIR}/src/FarmLand.cpp
 )
 
@@ -71,33 +71,33 @@ set_target_properties(input-parser-unit-tests
 add_test(input-parser-unit-tests input-parser-unit-tests)
 
 ######################################
-# Rectangle Tests
+# Land Tests
 ######################################
-add_executable(rectangle-unit-tests "")
+add_executable(land-unit-tests "")
 
-target_sources(rectangle-unit-tests
+target_sources(land-unit-tests
     PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/RectangleTests.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/LandTests.cpp
         ${PROJECT_SOURCE_DIR}/src/Point.cpp
 )
 
-target_include_directories(rectangle-unit-tests
+target_include_directories(land-unit-tests
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src
 )
 
-target_link_libraries(rectangle-unit-tests
+target_link_libraries(land-unit-tests
     PRIVATE
         gtest
         gtest_main
         Threads::Threads
 )
 
-set_target_properties(rectangle-unit-tests
+set_target_properties(land-unit-tests
     PROPERTIES
         CXX_STANDARD 14
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
 
-add_test(rectangle-unit-tests rectangle-unit-tests)
+add_test(land-unit-tests land-unit-tests)

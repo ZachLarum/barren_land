@@ -1,6 +1,5 @@
 #include "InputParser.hpp"
 #include "Point.hpp"
-#include "Rectangle.hpp"
 #include "Exception.hpp"
 
 #include <algorithm>
@@ -8,6 +7,7 @@
 #include <iterator>
 #include <sstream>
 #include <string>
+#include "Land.hpp"
 
 namespace
 {
@@ -69,7 +69,7 @@ void VerifyRelativePointLocations(const common::Point& bottomLeft, const common:
     }
 }
 
-common::Rectangle ParseRectangle(const std::string& data)
+common::Land ParseLand(const std::string& data)
 {
     auto coordinates = Split(data, ' ');\
     StripElem(coordinates, {""});
@@ -86,14 +86,14 @@ common::Rectangle ParseRectangle(const std::string& data)
     return {bottomLeft, topRight};
 }
 
-std::vector<common::Rectangle> ParseRectangles(const std::string& data)
+std::vector<common::Land> ParseAllLand(const std::string& data)
 {
     auto plotStrings = Split(data, ',');
 
-    std::vector<common::Rectangle> rec{};
+    std::vector<common::Land> rec{};
     for(const auto& p : plotStrings)
     {
-        rec.emplace_back(ParseRectangle(p));
+        rec.emplace_back(ParseLand(p));
     }
 
     return rec;
@@ -102,11 +102,11 @@ std::vector<common::Rectangle> ParseRectangles(const std::string& data)
 
 namespace common
 {
-std::vector<Rectangle> ParseInput()
+std::vector<Land> ParseInput()
 {
     std::string answer;
     std::getline(std::cin, answer);
 
-    return ParseRectangles(answer);
+    return ParseAllLand(answer);
 }
 }

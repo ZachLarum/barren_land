@@ -4,20 +4,19 @@
 #include <algorithm>
 #include <queue>
 #include <sstream>
-#include <stdexcept>
 
 namespace common
 {
 FarmLand::FarmLand(Point corner1, Point corner2)
-  : Rectangle(corner1, corner2),
-    land{std::vector<std::vector<SoilStatus>>(std::abs(corner1.y - corner2.y),
+  : common::Land{corner1, corner2},
+    plots{std::vector<std::vector<SoilStatus>>(std::abs(corner1.y - corner2.y),
         std::vector<SoilStatus>(std::abs(corner1.x - corner2.x), SoilStatus::Fertile))},
     xOffset{std::min(corner1.x, corner2.x)},
     yOffset{std::min(corner1.y, corner2.y)}
 {
 }
 
-void FarmLand::AddBarrenPlot(const Rectangle& plot)
+void FarmLand::AddBarrenPlot(const common::Land& plot)
 {
     auto plotTop = std::min(plot.Top() - yOffset, Height());
     auto plotBottom = std::max(plot.Bottom() - yOffset, 0);
@@ -31,8 +30,7 @@ void FarmLand::AddBarrenPlot(const Rectangle& plot)
             SetSoilStatus({x,y}, SoilStatus::Infertile);
         }
     }
-};
-
+}
 
 std::vector<size_t> FarmLand::FertilePlots()
 {
@@ -57,16 +55,16 @@ std::vector<size_t> FarmLand::FertilePlots()
 
 std::vector<std::vector<SoilStatus>> FarmLand::Land() const
 {
-    return land;
+    return plots;
 }
 
 int FarmLand::Width() const
 {
-    return land.front().size();
+    return plots.front().size();
 }
 int FarmLand::Height() const
 {
-    return land.size();
+    return plots.size();
 }
 
 bool FarmLand::IsPointInBounds(const Point& loc) const
@@ -78,7 +76,7 @@ SoilStatus FarmLand::GetSoilStatus(const Point& loc) const
 {
     if(IsPointInBounds(loc))
     {
-        return land[loc.y][loc.x];
+        return plots[loc.y][loc.x];
     }
     return SoilStatus::OutOfBounds;
 }
@@ -87,7 +85,7 @@ void FarmLand::SetSoilStatus(const Point& loc, SoilStatus status)
 {
     if(IsPointInBounds(loc))
     {
-        land[loc.y][loc.x] = status;
+        plots[loc.y][loc.x] = status;
     }
 }
 
@@ -113,12 +111,12 @@ std::vector<Point> FarmLand::FindSurroudingFertilePoints(const Point& loc)
 size_t FarmLand::FindSizeOfPlot(const Point& loc)
 {
     auto plotSize = size_t{0};
-    if(GetSoilStatus(loc) != common::SoilStatus::Fertile)
+    if(GetSoilStatus(loc) != SoilStatus::Fertile)
     {
         return plotSize;
     }
 
-    SetSoilStatus(loc, common::SoilStatus::Checked);
+    SetSoilStatus(loc, SoilStatus::Checked);
     auto queue = std::queue<Point>{};
     queue.emplace(loc);
 
@@ -126,7 +124,7 @@ size_t FarmLand::FindSizeOfPlot(const Point& loc)
     {
         auto currentLoc = queue.front();
         queue.pop();
-        if(GetSoilStatus(currentLoc) == common::SoilStatus::Checked)
+        if(GetSoilStatus(currentLoc) == SoilStatus::Checked)
         {
             ++plotSize;
             auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
