@@ -1,3 +1,4 @@
+#include "ArgParse.hpp"
 #include "Exception.hpp"
 #include "FarmLand.hpp"
 #include "InputParser.hpp"
@@ -5,11 +6,10 @@
 #include "Point.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <iterator>
 #include <vector>
 
-// Questions
-// If I enter 5 5 5 5, does that mean 1 plot is infertile?
 
 namespace
 {
@@ -56,34 +56,26 @@ void PrintPlots(const std::vector<size_t>& plots)
     }
     std::cout << std::endl;
 }
-
-// TODO remove
-void PrintFarm(const common::FarmLand& land)
-{
-    auto l =  land.Land();
-    for(auto& col : l)
-    {
-        for(auto& row : col)
-        {
-            std::cout << (row == common::SoilStatus::Fertile) << " ";
-        }
-        std::cout << "\n";
-    }
-}
 }
 
-int main()
+int main(int argc, char** argv)
 {
+    auto params = common::ParseArgs(argc, argv);
+
+    auto farm = common::FarmLand(
+        common::Point{params.left, params.bottom},
+        common::Point{params.right, params.top});
+
     auto barrenPlots = PromptUser();
-
-    auto farm = common::FarmLand(common::Point{0,0}, common::Point{10, 10});
 
     for(const auto& plot : barrenPlots)
     {
         farm.AddBarrenPlot(plot);
     }
-
-    PrintFarm(farm);
+    if (params.printFarm)
+    {
+        farm.PrintFarm();
+    }
     auto plots = farm.FertilePlots();
     PrintPlots(plots);
 }

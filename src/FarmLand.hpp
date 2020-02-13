@@ -25,7 +25,7 @@ public:
 
     std::vector<size_t> FertilePlots();
 
-    std::vector<std::vector<SoilStatus>> Land() const;
+    void PrintFarm() const;
 private:
     int Height() const;
     int Width() const;

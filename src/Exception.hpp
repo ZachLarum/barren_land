@@ -1,3 +1,6 @@
+#ifndef SRC__EXCEPTION_HPP
+#define SRC__EXCEPTION_HPP
+
 #include <exception>
 #include <string>
 
@@ -30,3 +33,5 @@ private:
 };
 
 #define Exception(msg) ParseException { msg, __FILE__, __FUNCTION__, __LINE__ }
+
+#endif

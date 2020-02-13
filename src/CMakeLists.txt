@@ -1,5 +1,7 @@
 add_executable(barren-land-calculator
     main.cpp
+    ArgParse.cpp
+    Parse.cpp
     FarmLand.cpp
     InputParser.cpp
     Point.cpp

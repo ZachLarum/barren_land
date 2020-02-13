@@ -1,6 +1,7 @@
 #include "InputParser.hpp"
 #include "Exception.hpp"
 #include "Land.hpp"
+#include "Parse.hpp"
 #include "Point.hpp"
 
 #include <algorithm>
@@ -11,26 +12,6 @@
 
 namespace
 {
-int ToInt(const std::string& s)
-{
-    try
-    {
-        return std::stoi(s);
-    }
-    catch (const std::invalid_argument& e)
-    {
-        std::ostringstream errMsg;
-        errMsg << "'" << s << "' could not be converted to an int.\n";
-        throw Exception(errMsg.str());
-    }
-    catch (const std::out_of_range& e)
-    {
-        std::ostringstream errMsg;
-        errMsg << "'" << s << "' is out of the range of an int value.\n";
-        throw Exception(errMsg.str());
-    }
-}
-
 template<typename T>
 void StripElem(std::vector<T>& container, T item)
 {
@@ -80,8 +61,8 @@ common::Land ParseLand(const std::string& data)
                << coordinates.size() << ". Data received '" << data << "'\n";
         throw Exception(errMsg.str());
     }
-    auto bottomLeft = common::Point{ToInt(coordinates[0]), ToInt(coordinates[1])};
-    auto topRight = common::Point{ToInt(coordinates[2]), ToInt(coordinates[3])};
+    auto bottomLeft = common::Point{common::ToInt(coordinates[0]), common::ToInt(coordinates[1])};
+    auto topRight = common::Point{common::ToInt(coordinates[2]), common::ToInt(coordinates[3])};
     VerifyRelativePointLocations(bottomLeft, topRight);
     return {bottomLeft, topRight};
 }
