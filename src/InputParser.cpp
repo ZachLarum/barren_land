@@ -1,13 +1,13 @@
 #include "InputParser.hpp"
-#include "Point.hpp"
 #include "Exception.hpp"
+#include "Land.hpp"
+#include "Point.hpp"
 
 #include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <sstream>
 #include <string>
-#include "Land.hpp"
 
 namespace
 {
