@@ -48,7 +48,7 @@ int main()
 
     // TODO Catch exceptions, display message, and reprompt.
     auto barrenPlots = common::ParseInput();
-    auto farm = common::FarmLand(10, 10);
+    auto farm = common::FarmLand(common::Point{0,0}, common::Point{10, 10});
 
     for(const auto& plot : barrenPlots)
     {

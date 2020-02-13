@@ -1,4 +1,5 @@
 #include "FarmLand.hpp"
+#include "Exception.hpp"
 
 #include <algorithm>
 #include <queue>
@@ -7,33 +8,27 @@
 
 namespace common
 {
-
-FarmLand::FarmLand(size_t height, size_t width)
-: land{std::vector<std::vector<SoilStatus>>(height, std::vector<SoilStatus>(width, SoilStatus::Fertile))}
+FarmLand::FarmLand(Point corner1, Point corner2)
+  : Rectangle(corner1, corner2),
+    land{std::vector<std::vector<SoilStatus>>(std::abs(corner1.y - corner2.y),
+        std::vector<SoilStatus>(std::abs(corner1.x - corner2.x), SoilStatus::Fertile))},
+    xOffset{std::min(corner1.x, corner2.x)},
+    yOffset{std::min(corner1.y, corner2.y)}
 {
-    if(height == 0 || width == 0)
-    {
-        std::ostringstream errMsg;
-        errMsg << "Incorrect dimensions entered."
-               << " Farm must have a height of at least 1 and a width of at least 1.\n"
-               << " Height: " << height
-               << " Width: " << width << "\n";
-        throw std::runtime_error(errMsg.str());
-    }
 }
 
 void FarmLand::AddBarrenPlot(const Rectangle& plot)
 {
-    auto plotTop = std::min(plot.Top(), Height());
-    auto plotBottom = std::max(plot.Bottom(), 0);
-    auto plotLeft = std::max(plot.Left(), 0);
-    auto plotRight = std::min(plot.Right(), Width());
+    auto plotTop = std::min(plot.Top() - yOffset, Height());
+    auto plotBottom = std::max(plot.Bottom() - yOffset, 0);
+    auto plotLeft = std::max(plot.Left() - xOffset, 0);
+    auto plotRight = std::min(plot.Right() - xOffset, Width());
 
     for(auto y = plotBottom; y < plotTop; ++y)
     {
         for(auto x = plotLeft; x < plotRight; ++x)
         {
-            land[y][x] = SoilStatus::Infertile;
+            SetSoilStatus({x,y}, SoilStatus::Infertile);
         }
     }
 };
@@ -43,13 +38,13 @@ std::vector<size_t> FarmLand::FertilePlots()
 {
     auto fertilePlots = std::vector<size_t>{};
 
-    for(size_t y = 0; y < Height(); ++y)
+    for(int y = 0; y < Height(); ++y)
     {
-        for(size_t x = 0; x < Width(); ++x)
+        for(int x = 0; x < Width(); ++x)
         {
-            if(land[y][x] == SoilStatus::Fertile)
+            if(GetSoilStatus({x, y}) == SoilStatus::Fertile)
             {
-                auto plotSize = FindSizeOfPlot(Point{static_cast<int>(x), static_cast<int>(y)});
+                auto plotSize = FindSizeOfPlot({x, y});
                 fertilePlots.emplace_back(plotSize);
             }
         }
@@ -102,7 +97,6 @@ std::vector<Point> FarmLand::FindSurroudingFertilePoints(const Point& loc)
     auto right = Point{loc.x + 1, loc.y};
     auto down = Point{loc.x, loc.y - 1};
     auto up = Point{loc.x, loc.y + 1};
-
     auto surroundingPlots = std::vector<Point>{left, right, up, down};
     auto fertilePlots = std::vector<Point>{};
     for (const auto& plot : surroundingPlots)
@@ -119,21 +113,27 @@ std::vector<Point> FarmLand::FindSurroudingFertilePoints(const Point& loc)
 size_t FarmLand::FindSizeOfPlot(const Point& loc)
 {
     auto plotSize = size_t{0};
-    auto queue = std::queue<Point>{};
+    if(GetSoilStatus(loc) != common::SoilStatus::Fertile)
+    {
+        return plotSize;
+    }
 
+    SetSoilStatus(loc, common::SoilStatus::Checked);
+    auto queue = std::queue<Point>{};
     queue.emplace(loc);
 
     while(!queue.empty())
     {
         auto currentLoc = queue.front();
         queue.pop();
-        auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
-
-        plotSize += fertilePlots.size();
-
-        for(const auto& plot : fertilePlots)
+        if(GetSoilStatus(currentLoc) == common::SoilStatus::Checked)
         {
-            queue.emplace(plot);
+            ++plotSize;
+            auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
+            for(const auto& plot : fertilePlots)
+            {
+                queue.emplace(plot);
+            }
         }
     }
 

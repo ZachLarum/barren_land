@@ -1,7 +1,9 @@
 #include "InputParser.hpp"
 #include "Point.hpp"
 #include "Rectangle.hpp"
+#include "Exception.hpp"
 
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <sstream>
@@ -17,14 +19,22 @@ int ToInt(const std::string& s)
     }
     catch (const std::invalid_argument& e)
     {
-        std::cerr << "'" << s << "' could not be converted to an int.\n";
-        throw e;
+        std::ostringstream errMsg;
+        errMsg << "'" << s << "' could not be converted to an int.\n";
+        throw Exception(errMsg.str());
     }
     catch (const std::out_of_range& e)
     {
-        std::cerr << "'" << s << "' is greater than the int max value.\n";
-        throw e;
+        std::ostringstream errMsg;
+        errMsg << "'" << s << "' is out of the range of an int value.\n";
+        throw Exception(errMsg.str());
     }
+}
+
+template<typename T>
+void StripElem(std::vector<T>& container, T item)
+{
+    container.erase(std::remove(container.begin(), container.end(), item), container.end());
 }
 
 std::vector<std::string> Split(const std::string& s, char delim)
@@ -41,34 +51,34 @@ std::vector<std::string> Split(const std::string& s, char delim)
 
 void VerifyRelativePointLocations(const common::Point& bottomLeft, const common::Point& topRight)
 {
-    if(bottomLeft.x >= topRight.x)
+    if(bottomLeft.x >= topRight.x || bottomLeft.y >= topRight.y)
     {
         std::ostringstream errMsg;
         errMsg << "Relative point locations are invalid."
-               << " Bottom left x coordinate is greater than than top right x coordinate.\n"
                << " Bottom left: " << bottomLeft
                << " Top right: "  << topRight << "\n";
-        throw std::runtime_error(errMsg.str());
-    }
-    if(bottomLeft.y >= topRight.y)
-    {
-        std::ostringstream errMsg;
-        errMsg << "Relative point locations are invalid."
-               << " Bottom left y coordinate is greater than than top right y coordinate.\n"
-               << " Bottom left: " << bottomLeft
-               << " Top right: " << topRight << "\n";
-        throw std::runtime_error(errMsg.str());
+        if(bottomLeft.x >= topRight.x)
+        {
+            errMsg  << " Bottom left x coordinate is greater than or equal to top right x coordinate.\n";
+        }
+        if(bottomLeft.y >= topRight.y)
+        {
+            errMsg << " Bottom left y coordinate is greater than or equal to top right y coordinate.\n";
+        }
+        throw Exception(errMsg.str());
     }
 }
 
 common::Rectangle ParseRectangle(const std::string& data)
 {
-    auto coordinates = Split(data, ' ');
+    auto coordinates = Split(data, ' ');\
+    StripElem(coordinates, {""});
     if(coordinates.size() % 4 != 0)
     {
-        // todo make more explicit
-        throw std::runtime_error(std::string{"Invalid number of points given. Expected 4, received "} +
-                std::to_string(coordinates.size()) + ". Points data received '" + data + "'");
+        std::ostringstream errMsg;
+        errMsg << "Invalid number of points given. Expected 4, received "
+               << coordinates.size() << ". Data received '" << data << "'\n";
+        throw Exception(errMsg.str());
     }
     auto bottomLeft = common::Point{ToInt(coordinates[0]), ToInt(coordinates[1])};
     auto topRight = common::Point{ToInt(coordinates[2]), ToInt(coordinates[3])};

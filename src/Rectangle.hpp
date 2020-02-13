@@ -5,7 +5,7 @@
 
 namespace common
 {
-class Rectangle final
+class Rectangle
 {
 public:
     Rectangle(Point corner1, Point corner2);
@@ -14,6 +14,8 @@ public:
     int Bottom() const;
     int Left() const;
     int Right() const;
+
+    int Area() const;
 private:
     int FindTop(int x1, int x2);
     int FindBottom(int x1, int x2);
