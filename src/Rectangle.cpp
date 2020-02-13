@@ -48,6 +48,11 @@ int Rectangle::Right() const
     return right;
 }
 
+int Rectangle::Area() const
+{
+    return (Top() - Bottom()) * (Right() - Left());
+}
+
 int Rectangle::FindBottom(int x1, int x2)
 {
     return std::min(x1, x2);

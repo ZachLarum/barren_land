@@ -9,17 +9,17 @@ TEST(Rectangle, Constructor_ValidPoints_ReturnsRectangle)
     auto bottomLeft = common::Point{1, 2};
     auto topRight = common::Point{3, 4};
 
-    auto expected = common::Rectangle{bottomLeft, topRight};
-    EXPECT_EQ(expected.Top(), 4);
-    EXPECT_EQ(expected.Bottom(), 2);
-    EXPECT_EQ(expected.Left(), 1);
-    EXPECT_EQ(expected.Right(), 3);
+    auto actual = common::Rectangle{bottomLeft, topRight};
+    EXPECT_EQ(actual.Top(), 4);
+    EXPECT_EQ(actual.Bottom(), 2);
+    EXPECT_EQ(actual.Left(), 1);
+    EXPECT_EQ(actual.Right(), 3);
 
-    expected = common::Rectangle{topRight, bottomLeft};
-    EXPECT_EQ(expected.Top(), 4);
-    EXPECT_EQ(expected.Bottom(), 2);
-    EXPECT_EQ(expected.Left(), 1);
-    EXPECT_EQ(expected.Right(), 3);
+    actual = common::Rectangle{topRight, bottomLeft};
+    EXPECT_EQ(actual.Top(), 4);
+    EXPECT_EQ(actual.Bottom(), 2);
+    EXPECT_EQ(actual.Left(), 1);
+    EXPECT_EQ(actual.Right(), 3);
 }
 
 TEST(Rectangle, Constructor_SamePoint_Throws)
