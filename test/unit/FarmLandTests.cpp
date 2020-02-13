@@ -300,3 +300,87 @@ TEST_F(FarmLandTest, SetSoilStatus_PointOutOfBounds_DoesNotThrow)
     EXPECT_NO_THROW(farmLand.SetSoilStatus({-1,-1}, common::SoilStatus::Infertile));
 }
 
+TEST_F(FarmLandTest, FindSurroundingFertilePoints_AllAdjacentPointsFertile_ReturnsFourPoints)
+{
+    auto points = farmLand.FindSurroudingFertilePoints({1,1});
+
+    ASSERT_EQ(points.size(), 4);
+
+    auto expected = std::vector<common::Point>{{0, 1}, {1, 0}, {2, 1}, {1, 2}};
+    for(const auto& p : expected)
+    {
+        EXPECT_TRUE(
+            std::any_of(points.begin(), points.end(),
+                [&p](const auto& e)
+                {
+                    return e.x == p.x && e.y == p.y;
+                }));
+    }
+}
+
+TEST_F(FarmLandTest, FindSurroundingFertilePoints_CornerPlotAllAdjacentAreFertile_ReturnsTwoPoints)
+{
+    auto points = farmLand.FindSurroudingFertilePoints({0,0});
+
+    ASSERT_EQ(points.size(), 2);
+
+    auto expected = std::vector<common::Point>{{0, 1}, {1, 0}};
+    for(const auto& p : expected)
+    {
+        EXPECT_TRUE(
+            std::any_of(points.begin(), points.end(),
+                [&p](const auto& e)
+                {
+                    return e.x == p.x && e.y == p.y;
+                }));
+    }
+}
+
+TEST_F(FarmLandTest, FindSurroundingFertilePoints_HalfAdjacentAreFertile_ReturnsTwoPoints)
+{
+    farmLand.SetSoilStatus({1, 2}, common::SoilStatus::Infertile);
+    farmLand.SetSoilStatus({2, 1}, common::SoilStatus::Infertile);
+    auto points = farmLand.FindSurroudingFertilePoints({1,1});
+
+    ASSERT_EQ(points.size(), 2);
+
+    auto expected = std::vector<common::Point>{{0, 1}, {1, 0}};
+    for(const auto& p : expected)
+    {
+        EXPECT_TRUE(
+            std::any_of(points.begin(), points.end(),
+                [&p](const auto& e)
+                {
+                    return e.x == p.x && e.y == p.y;
+                }));
+    }
+}
+
+TEST_F(FarmLandTest, FindSizeOfPlot_AllFertile_ReturnsArea)
+{
+    auto area = farmLand.FindSizeOfPlot({1,1});
+
+    ASSERT_EQ(area, xRight * yTop);
+}
+
+TEST_F(FarmLandTest, FindSizeOfPlot_FourPlotsInfertile_ReturnsAreaMinusFour)
+{
+    farmLand.SetSoilStatus({0,0}, common::SoilStatus::Infertile);
+    farmLand.SetSoilStatus({3, yTop - 2}, common::SoilStatus::Infertile);
+    farmLand.SetSoilStatus({xRight - 1, 1}, common::SoilStatus::Infertile);
+    farmLand.SetSoilStatus({3,3}, common::SoilStatus::Infertile);
+    auto area = farmLand.FindSizeOfPlot({1,1});
+
+    ASSERT_EQ(area, xRight * yTop - 4);
+}
+
+TEST_F(FarmLandTest, FindSizeOfPlot_Infertile_ReturnsZero)
+{
+    farmLand.SetSoilStatus({1,1}, common::SoilStatus::Infertile);
+    auto area = farmLand.FindSizeOfPlot({1,1});
+
+    ASSERT_EQ(area, 0);
+}
+
+
+

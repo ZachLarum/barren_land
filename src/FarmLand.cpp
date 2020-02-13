@@ -38,13 +38,13 @@ std::vector<size_t> FarmLand::FertilePlots()
 {
     auto fertilePlots = std::vector<size_t>{};
 
-    for(size_t y = 0; y < Height(); ++y)
+    for(int y = 0; y < Height(); ++y)
     {
-        for(size_t x = 0; x < Width(); ++x)
+        for(int x = 0; x < Width(); ++x)
         {
             if(land[y][x] == SoilStatus::Fertile)
             {
-                auto plotSize = FindSizeOfPlot(Point{static_cast<int>(x), static_cast<int>(y)});
+                auto plotSize = FindSizeOfPlot({x, y});
                 fertilePlots.emplace_back(plotSize);
             }
         }
@@ -97,14 +97,12 @@ std::vector<Point> FarmLand::FindSurroudingFertilePoints(const Point& loc)
     auto right = Point{loc.x + 1, loc.y};
     auto down = Point{loc.x, loc.y - 1};
     auto up = Point{loc.x, loc.y + 1};
-
     auto surroundingPlots = std::vector<Point>{left, right, up, down};
     auto fertilePlots = std::vector<Point>{};
     for (const auto& plot : surroundingPlots)
     {
         if(GetSoilStatus(plot) == SoilStatus::Fertile)
         {
-            SetSoilStatus(plot, SoilStatus::Checked);
             fertilePlots.emplace_back(plot);
         }
     }
@@ -117,14 +115,17 @@ size_t FarmLand::FindSizeOfPlot(const Point& loc)
     auto queue = std::queue<Point>{};
 
     queue.emplace(loc);
-
     while(!queue.empty())
     {
         auto currentLoc = queue.front();
         queue.pop();
-        auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
 
-        plotSize += fertilePlots.size();
+        if(GetSoilStatus(loc) == SoilStatus::Fertile)
+        {
+            SetSoilStatus(loc, SoilStatus::Checked);
+            ++plotSize;
+        }
+        auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
 
         for(const auto& plot : fertilePlots)
         {
