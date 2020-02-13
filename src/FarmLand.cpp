@@ -28,7 +28,7 @@ void FarmLand::AddBarrenPlot(const Rectangle& plot)
     {
         for(auto x = plotLeft; x < plotRight; ++x)
         {
-            land[y][x] = SoilStatus::Infertile;
+            SetSoilStatus({x,y}, SoilStatus::Infertile);
         }
     }
 };
@@ -42,7 +42,7 @@ std::vector<size_t> FarmLand::FertilePlots()
     {
         for(int x = 0; x < Width(); ++x)
         {
-            if(land[y][x] == SoilStatus::Fertile)
+            if(GetSoilStatus({x, y}) == SoilStatus::Fertile)
             {
                 auto plotSize = FindSizeOfPlot({x, y});
                 fertilePlots.emplace_back(plotSize);
@@ -103,6 +103,7 @@ std::vector<Point> FarmLand::FindSurroudingFertilePoints(const Point& loc)
     {
         if(GetSoilStatus(plot) == SoilStatus::Fertile)
         {
+            SetSoilStatus(plot, SoilStatus::Checked);
             fertilePlots.emplace_back(plot);
         }
     }
@@ -112,24 +113,27 @@ std::vector<Point> FarmLand::FindSurroudingFertilePoints(const Point& loc)
 size_t FarmLand::FindSizeOfPlot(const Point& loc)
 {
     auto plotSize = size_t{0};
-    auto queue = std::queue<Point>{};
+    if(GetSoilStatus(loc) != common::SoilStatus::Fertile)
+    {
+        return plotSize;
+    }
 
+    SetSoilStatus(loc, common::SoilStatus::Checked);
+    auto queue = std::queue<Point>{};
     queue.emplace(loc);
+
     while(!queue.empty())
     {
         auto currentLoc = queue.front();
         queue.pop();
-
-        if(GetSoilStatus(loc) == SoilStatus::Fertile)
+        if(GetSoilStatus(currentLoc) == common::SoilStatus::Checked)
         {
-            SetSoilStatus(loc, SoilStatus::Checked);
             ++plotSize;
-        }
-        auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
-
-        for(const auto& plot : fertilePlots)
-        {
-            queue.emplace(plot);
+            auto fertilePlots = FindSurroudingFertilePoints(currentLoc);
+            for(const auto& plot : fertilePlots)
+            {
+                queue.emplace(plot);
+            }
         }
     }
 
