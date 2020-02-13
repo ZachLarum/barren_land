@@ -1,39 +1,39 @@
 #include "gtest/gtest.h"
 
 #define private public
-#include "Rectangle.cpp"
+#include "Land.cpp"
 #undef private
 
-TEST(Rectangle, Constructor_ValidPoints_ReturnsRectangle)
+TEST(Land, Constructor_ValidPoints_ReturnsLand)
 {
     auto bottomLeft = common::Point{1, 2};
     auto topRight = common::Point{3, 4};
 
-    auto actual = common::Rectangle{bottomLeft, topRight};
+    auto actual = common::Land{bottomLeft, topRight};
     EXPECT_EQ(actual.Top(), 4);
     EXPECT_EQ(actual.Bottom(), 2);
     EXPECT_EQ(actual.Left(), 1);
     EXPECT_EQ(actual.Right(), 3);
 
-    actual = common::Rectangle{topRight, bottomLeft};
+    actual = common::Land{topRight, bottomLeft};
     EXPECT_EQ(actual.Top(), 4);
     EXPECT_EQ(actual.Bottom(), 2);
     EXPECT_EQ(actual.Left(), 1);
     EXPECT_EQ(actual.Right(), 3);
 }
 
-TEST(Rectangle, Constructor_SamePoint_Throws)
+TEST(Land, Constructor_SamePoint_Throws)
 {
     auto point = common::Point{1, 1};
     EXPECT_THROW({
         try
         {
-            common::Rectangle(point, point);
+            common::Land(point, point);
         }
         catch( const ParseException& e )
         {
             std::ostringstream errMsg;
-            errMsg << "Invalid points received for a Rectangle:\n"
+            errMsg << "Invalid points received for the creation of Land:\n"
                    << "Point 1: " << point << ", Point 2: " << point << "\n"
                    << "\tBoth x coordinates are the same.\n"
                    << "\tBoth y coordinates are the same.\n";
@@ -43,19 +43,19 @@ TEST(Rectangle, Constructor_SamePoint_Throws)
     }, ParseException );
 }
 
-TEST(Rectangle, Constructor_SameXValue_Throws)
+TEST(Land, Constructor_SameXValue_Throws)
 {
     auto bottomLeft = common::Point{1, 2};
     auto topRight = common::Point{1, 4};
     EXPECT_THROW({
         try
         {
-            common::Rectangle(bottomLeft, topRight);
+            common::Land(bottomLeft, topRight);
         }
         catch( const ParseException& e )
         {
             std::ostringstream errMsg;
-            errMsg << "Invalid points received for a Rectangle:\n"
+            errMsg << "Invalid points received for the creation of Land:\n"
                    << "Point 1: " << bottomLeft << ", Point 2: " << topRight << "\n"
                    << "\tBoth x coordinates are the same.\n";
             EXPECT_STREQ(errMsg.str().c_str(), e.what() );
@@ -64,19 +64,19 @@ TEST(Rectangle, Constructor_SameXValue_Throws)
     }, ParseException );
 }
 
-TEST(Rectangle, Constructor_SameYValue_Throws)
+TEST(Land, Constructor_SameYValue_Throws)
 {
     auto bottomLeft = common::Point{1, 2};
     auto topRight = common::Point{3, 2};
     EXPECT_THROW({
         try
         {
-            common::Rectangle(bottomLeft, topRight);
+            common::Land(bottomLeft, topRight);
         }
         catch( const ParseException& e )
         {
             std::ostringstream errMsg;
-            errMsg << "Invalid points received for a Rectangle:\n"
+            errMsg << "Invalid points received for the creation of Land:\n"
                    << "Point 1: " << bottomLeft << ", Point 2: " << topRight << "\n"
                    << "\tBoth y coordinates are the same.\n";
             EXPECT_STREQ(errMsg.str().c_str(), e.what() );

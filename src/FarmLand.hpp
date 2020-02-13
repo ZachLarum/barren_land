@@ -1,9 +1,8 @@
 #ifndef SRC__FARM_LAND_HPP
 #define SRC__FARM_LAND_HPP
 
+#include "Land.hpp"
 #include "Point.hpp"
-#include "Rectangle.hpp"
-
 #include <string>
 #include <vector>
 
@@ -17,12 +16,12 @@ enum class SoilStatus
     Infertile,
 };
 
-class FarmLand : public Rectangle
+class FarmLand : public Land
 {
 public:
     FarmLand(Point corner1, Point corner2);
 
-    void AddBarrenPlot(const common::Rectangle& plot);
+    void AddBarrenPlot(const Land& plot);
 
     std::vector<size_t> FertilePlots();
 
@@ -31,16 +30,16 @@ private:
     int Height() const;
     int Width() const;
 
-    bool IsPointInBounds(const common::Point& loc) const;
+    bool IsPointInBounds(const Point& loc) const;
 
-    SoilStatus GetSoilStatus(const common::Point& loc) const;
-    void SetSoilStatus(const common::Point& loc, SoilStatus status);
+    SoilStatus GetSoilStatus(const Point& loc) const;
+    void SetSoilStatus(const Point& loc, SoilStatus status);
 
-    size_t FindSizeOfPlot(const common::Point& loc);
+    size_t FindSizeOfPlot(const Point& loc);
 
-    std::vector<common::Point> FindSurroudingFertilePoints(const common::Point& loc);
+    std::vector<Point> FindSurroudingFertilePoints(const Point& loc);
 
-    std::vector<std::vector<SoilStatus>> land;
+    std::vector<std::vector<SoilStatus>> plots;
     int xOffset;
     int yOffset;
 };

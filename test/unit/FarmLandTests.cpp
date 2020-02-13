@@ -9,12 +9,12 @@
 TEST(FarmLand, Constructor_ValidDimensions_ReturnsFarmLand)
 {
     auto actual = common::FarmLand{{0, 0}, {1, 2}};
-    EXPECT_EQ(actual.land.size(), 2);
-    EXPECT_EQ(actual.land.front().size(), 1);
+    EXPECT_EQ(actual.plots.size(), 2);
+    EXPECT_EQ(actual.plots.front().size(), 1);
 
     actual = common::FarmLand{{-3, -1}, {1, 2}};
-    EXPECT_EQ(actual.land.size(), 3);
-    EXPECT_EQ(actual.land.front().size(), 4);
+    EXPECT_EQ(actual.plots.size(), 3);
+    EXPECT_EQ(actual.plots.front().size(), 4);
 }
 
 TEST(FarmLand, Constructor_BadPoints_Throws)
@@ -45,18 +45,18 @@ public:
 
     virtual void SetUp() override
     {
-        ASSERT_EQ(offsetFarmLand.land.size(), yTop - yBottom);
-        ASSERT_EQ(offsetFarmLand.land.front().size(), xRight - xLeft);
+        ASSERT_EQ(offsetFarmLand.plots.size(), yTop - yBottom);
+        ASSERT_EQ(offsetFarmLand.plots.front().size(), xRight - xLeft);
         EXPECT_TRUE(IsEveryPlotFertile());
     }
 
     bool IsEveryPlotFertile()
     {
-        for(auto col = 0; col < farmLand.land.size(); ++col)
+        for(auto col = 0; col < farmLand.plots.size(); ++col)
         {
-            for(auto row = 0; row < farmLand.land.front().size(); ++row)
+            for(auto row = 0; row < farmLand.plots.front().size(); ++row)
             {
-                if(farmLand.land[col][row] != common::SoilStatus::Fertile)
+                if(farmLand.plots[col][row] != common::SoilStatus::Fertile)
                 {
                     return false;
                 }
@@ -79,17 +79,17 @@ TEST_F(FarmLandTest, AddBarrenPlot_SinglePlot_Succeeds)
     auto x = 2;
     auto y = 1;
 
-    farmLand.AddBarrenPlot(common::Rectangle{{x, y}, {x + 1, y + 1}});
+    farmLand.AddBarrenPlot(common::Land{{x, y}, {x + 1, y + 1}});
 
-    EXPECT_EQ(farmLand.land[y][x], common::SoilStatus::Infertile);
+    EXPECT_EQ(farmLand.plots[y][x], common::SoilStatus::Infertile);
 
-    for(auto col = 0; col < farmLand.land.size(); ++col)
+    for(auto col = 0; col < farmLand.plots.size(); ++col)
     {
-        for(auto row = 0; row < farmLand.land.front().size(); ++row)
+        for(auto row = 0; row < farmLand.plots.front().size(); ++row)
         {
             if(col != y && row != x)
             {
-                EXPECT_EQ(farmLand.land[col][row], common::SoilStatus::Fertile);
+                EXPECT_EQ(farmLand.plots[col][row], common::SoilStatus::Fertile);
             }
         }
     }
@@ -100,17 +100,17 @@ TEST_F(FarmLandTest, AddBarrenPlot_SinglePlotOffsetFarm_Succeeds)
     auto x = -3;
     auto y = -5;
 
-    offsetFarmLand.AddBarrenPlot(common::Rectangle{{x, y}, {x + 1, y + 1}});
+    offsetFarmLand.AddBarrenPlot(common::Land{{x, y}, {x + 1, y + 1}});
 
-    EXPECT_EQ(offsetFarmLand.land[y - offsetFarmLand.Bottom()][x - offsetFarmLand.Left()], common::SoilStatus::Infertile);
+    EXPECT_EQ(offsetFarmLand.plots[y - offsetFarmLand.Bottom()][x - offsetFarmLand.Left()], common::SoilStatus::Infertile);
 
-    for(auto col = 0; col < offsetFarmLand.land.size(); ++col)
+    for(auto col = 0; col < offsetFarmLand.plots.size(); ++col)
     {
-        for(auto row = 0; row < offsetFarmLand.land.front().size(); ++row)
+        for(auto row = 0; row < offsetFarmLand.plots.front().size(); ++row)
         {
             if(col != y - offsetFarmLand.Bottom() && row != x - offsetFarmLand.Left())
             {
-                EXPECT_EQ(offsetFarmLand.land[col][row], common::SoilStatus::Fertile);
+                EXPECT_EQ(offsetFarmLand.plots[col][row], common::SoilStatus::Fertile);
             }
         }
     }
@@ -121,21 +121,21 @@ TEST_F(FarmLandTest, AddBarrenPlot_SinglePlotCorners_Succeeds)
     auto xMax = farmLand.Width() - 1;
     auto yMax = farmLand.Height() - 1;
 
-    EXPECT_EQ(farmLand.land[0][0], common::SoilStatus::Fertile);
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, origin}, {origin + 1, origin + 1}});
-    EXPECT_EQ(farmLand.land[0][0], common::SoilStatus::Infertile);
+    EXPECT_EQ(farmLand.plots[0][0], common::SoilStatus::Fertile);
+    farmLand.AddBarrenPlot(common::Land{{origin, origin}, {origin + 1, origin + 1}});
+    EXPECT_EQ(farmLand.plots[0][0], common::SoilStatus::Infertile);
 
-    EXPECT_EQ(farmLand.land[0][xMax], common::SoilStatus::Fertile);
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight - 1, origin}, {xRight, origin + 1}});
-    EXPECT_EQ(farmLand.land[0][xMax], common::SoilStatus::Infertile);
+    EXPECT_EQ(farmLand.plots[0][xMax], common::SoilStatus::Fertile);
+    farmLand.AddBarrenPlot(common::Land{{xRight - 1, origin}, {xRight, origin + 1}});
+    EXPECT_EQ(farmLand.plots[0][xMax], common::SoilStatus::Infertile);
 
-    EXPECT_EQ(farmLand.land[yMax][0], common::SoilStatus::Fertile);
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, yTop - 1}, {origin + 1, yTop}});
-    EXPECT_EQ(farmLand.land[yMax][0], common::SoilStatus::Infertile);
+    EXPECT_EQ(farmLand.plots[yMax][0], common::SoilStatus::Fertile);
+    farmLand.AddBarrenPlot(common::Land{{origin, yTop - 1}, {origin + 1, yTop}});
+    EXPECT_EQ(farmLand.plots[yMax][0], common::SoilStatus::Infertile);
 
-    EXPECT_EQ(farmLand.land[yMax][xMax], common::SoilStatus::Fertile);
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight - 1, yTop - 1}, {xRight, yTop}});
-    EXPECT_EQ(farmLand.land[yMax][xMax], common::SoilStatus::Infertile);
+    EXPECT_EQ(farmLand.plots[yMax][xMax], common::SoilStatus::Fertile);
+    farmLand.AddBarrenPlot(common::Land{{xRight - 1, yTop - 1}, {xRight, yTop}});
+    EXPECT_EQ(farmLand.plots[yMax][xMax], common::SoilStatus::Infertile);
 }
 
 TEST_F(FarmLandTest, AddBarrenPlot_SinglePlotCornersOffsetFarm_Succeeds)
@@ -143,21 +143,21 @@ TEST_F(FarmLandTest, AddBarrenPlot_SinglePlotCornersOffsetFarm_Succeeds)
     auto xMax = offsetFarmLand.Width() - 1;
     auto yMax = offsetFarmLand.Height() - 1;
 
-    EXPECT_EQ(offsetFarmLand.land[0][0], common::SoilStatus::Fertile);
-    offsetFarmLand.AddBarrenPlot(common::Rectangle{{xLeft, yBottom}, {xLeft + 1, yBottom + 1}});
-    EXPECT_EQ(offsetFarmLand.land[0][0], common::SoilStatus::Infertile);
+    EXPECT_EQ(offsetFarmLand.plots[0][0], common::SoilStatus::Fertile);
+    offsetFarmLand.AddBarrenPlot(common::Land{{xLeft, yBottom}, {xLeft + 1, yBottom + 1}});
+    EXPECT_EQ(offsetFarmLand.plots[0][0], common::SoilStatus::Infertile);
 
-    EXPECT_EQ(offsetFarmLand.land[0][xMax], common::SoilStatus::Fertile);
-    offsetFarmLand.AddBarrenPlot(common::Rectangle{{xRight - 1, yBottom}, {xRight, yBottom + 1}});
-    EXPECT_EQ(offsetFarmLand.land[0][xMax], common::SoilStatus::Infertile);
+    EXPECT_EQ(offsetFarmLand.plots[0][xMax], common::SoilStatus::Fertile);
+    offsetFarmLand.AddBarrenPlot(common::Land{{xRight - 1, yBottom}, {xRight, yBottom + 1}});
+    EXPECT_EQ(offsetFarmLand.plots[0][xMax], common::SoilStatus::Infertile);
 
-    EXPECT_EQ(offsetFarmLand.land[yMax][0], common::SoilStatus::Fertile);
-    offsetFarmLand.AddBarrenPlot(common::Rectangle{{xLeft, yTop - 1}, {xLeft + 1, yTop}});
-    EXPECT_EQ(offsetFarmLand.land[yMax][0], common::SoilStatus::Infertile);
+    EXPECT_EQ(offsetFarmLand.plots[yMax][0], common::SoilStatus::Fertile);
+    offsetFarmLand.AddBarrenPlot(common::Land{{xLeft, yTop - 1}, {xLeft + 1, yTop}});
+    EXPECT_EQ(offsetFarmLand.plots[yMax][0], common::SoilStatus::Infertile);
 
-    EXPECT_EQ(offsetFarmLand.land[yMax][xMax], common::SoilStatus::Fertile);
-    offsetFarmLand.AddBarrenPlot(common::Rectangle{{xRight - 1, yTop - 1}, {xRight, yTop}});
-    EXPECT_EQ(offsetFarmLand.land[yMax][xMax], common::SoilStatus::Infertile);
+    EXPECT_EQ(offsetFarmLand.plots[yMax][xMax], common::SoilStatus::Fertile);
+    offsetFarmLand.AddBarrenPlot(common::Land{{xRight - 1, yTop - 1}, {xRight, yTop}});
+    EXPECT_EQ(offsetFarmLand.plots[yMax][xMax], common::SoilStatus::Infertile);
 }
 
 TEST_F(FarmLandTest, FertilePlots_NoPlots_ReturnsArea)
@@ -171,14 +171,14 @@ TEST_F(FarmLandTest, FertilePlots_NoPlots_ReturnsArea)
 
 TEST_F(FarmLandTest, FertilePlots_PlotsNotOnFarm_ReturnsArea)
 {
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, origin}, {-xRight, -yTop}});
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight + 5, yTop + 5}, {xRight, yTop}});
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, yTop}, {origin - 1, yTop + 5}});
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight, origin}, {xRight + 5, origin - 1}});
-    farmLand.AddBarrenPlot(common::Rectangle{{origin , yTop / 2}, {origin - 1, yTop / 2 + 1}});
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight / 2 , origin}, {xRight / 2 + 1, origin - 1}});
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight , yTop / 2}, {xRight + 1, yTop / 2 + 1}});
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight / 2 , yTop}, {xRight / 2 + 1, yTop + 1}});
+    farmLand.AddBarrenPlot(common::Land{{origin, origin}, {-xRight, -yTop}});
+    farmLand.AddBarrenPlot(common::Land{{xRight + 5, yTop + 5}, {xRight, yTop}});
+    farmLand.AddBarrenPlot(common::Land{{origin, yTop}, {origin - 1, yTop + 5}});
+    farmLand.AddBarrenPlot(common::Land{{xRight, origin}, {xRight + 5, origin - 1}});
+    farmLand.AddBarrenPlot(common::Land{{origin , yTop / 2}, {origin - 1, yTop / 2 + 1}});
+    farmLand.AddBarrenPlot(common::Land{{xRight / 2 , origin}, {xRight / 2 + 1, origin - 1}});
+    farmLand.AddBarrenPlot(common::Land{{xRight , yTop / 2}, {xRight + 1, yTop / 2 + 1}});
+    farmLand.AddBarrenPlot(common::Land{{xRight / 2 , yTop}, {xRight / 2 + 1, yTop + 1}});
 
     auto plots = farmLand.FertilePlots();
 
@@ -189,7 +189,7 @@ TEST_F(FarmLandTest, FertilePlots_PlotsNotOnFarm_ReturnsArea)
 
 TEST_F(FarmLandTest, FertilePlots_FarmSizePlot_ReturnsNothing)
 {
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, origin}, {xRight, yTop}});
+    farmLand.AddBarrenPlot(common::Land{{origin, origin}, {xRight, yTop}});
 
     auto plots = farmLand.FertilePlots();
 
@@ -198,7 +198,7 @@ TEST_F(FarmLandTest, FertilePlots_FarmSizePlot_ReturnsNothing)
 
 TEST_F(FarmLandTest, FertilePlots_PlotOverExtendingFarm_ReturnsNothing)
 {
-    farmLand.AddBarrenPlot(common::Rectangle{{origin - 5, origin - 5}, {xRight + 5, yTop + 5}});
+    farmLand.AddBarrenPlot(common::Land{{origin - 5, origin - 5}, {xRight + 5, yTop + 5}});
 
     auto plots = farmLand.FertilePlots();
 
@@ -207,7 +207,7 @@ TEST_F(FarmLandTest, FertilePlots_PlotOverExtendingFarm_ReturnsNothing)
 
 TEST_F(FarmLandTest, FertilePlots_SinglePlot_ReturnsOnePlotOneLessThanArea)
 {
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, origin}, {origin + 1, origin + 1}});
+    farmLand.AddBarrenPlot(common::Land{{origin, origin}, {origin + 1, origin + 1}});
 
     auto plots = farmLand.FertilePlots();
     ASSERT_EQ(plots.size(), 1);
@@ -216,7 +216,7 @@ TEST_F(FarmLandTest, FertilePlots_SinglePlot_ReturnsOnePlotOneLessThanArea)
 
 TEST_F(FarmLandTest, FertilePlots_SinglePlotCutsFarmInTwo_ReturnsTwo)
 {
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, yTop / 2}, {xRight, yTop / 2 + 1}});
+    farmLand.AddBarrenPlot(common::Land{{origin, yTop / 2}, {xRight, yTop / 2 + 1}});
 
     auto plots = farmLand.FertilePlots();
 
@@ -230,8 +230,8 @@ TEST_F(FarmLandTest, FertilePlots_SinglePlotCutsFarmInTwo_ReturnsTwo)
 
 TEST_F(FarmLandTest, FertilePlots_TwoPlotsCutsFarmInFour_ReturnsFour)
 {
-    farmLand.AddBarrenPlot(common::Rectangle{{origin, yTop / 2}, {xRight, yTop / 2 + 1}});
-    farmLand.AddBarrenPlot(common::Rectangle{{xRight / 2, origin}, {xRight / 2 + 1, yTop}});
+    farmLand.AddBarrenPlot(common::Land{{origin, yTop / 2}, {xRight, yTop / 2 + 1}});
+    farmLand.AddBarrenPlot(common::Land{{xRight / 2, origin}, {xRight / 2 + 1, yTop}});
 
     auto plots = farmLand.FertilePlots();
 

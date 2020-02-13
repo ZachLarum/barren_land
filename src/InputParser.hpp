@@ -5,9 +5,9 @@
 
 namespace common
 {
-struct Rectangle;
+class Land;
 
-std::vector<Rectangle> ParseInput();
+std::vector<Land> ParseInput();
 }
 
 #endif

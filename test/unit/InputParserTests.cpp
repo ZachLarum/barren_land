@@ -208,31 +208,31 @@ TEST(Free, VerifyRelativePointLocations_SameYCoordinate_Throws)
    }, ParseException );
 }
 
-TEST(Free, ParseRectangle_CorrectData_ReturnsRectangle)
+TEST(Free, ParseLand_CorrectData_ReturnsLand)
 {
-    auto expected = ParseRectangle("1 2 3 4");
+    auto expected = ParseLand("1 2 3 4");
     EXPECT_EQ(expected.Top(), 4);
     EXPECT_EQ(expected.Bottom(), 2);
     EXPECT_EQ(expected.Left(), 1);
     EXPECT_EQ(expected.Right(), 3);
 }
 
-TEST(Free, ParseRectangle_IllFormattedData_ReturnsRectangle)
+TEST(Free, ParseLand_IllFormattedData_ReturnsLand)
 {
-    auto expected = ParseRectangle(" 1   2  3 4    ");
+    auto expected = ParseLand(" 1   2  3 4    ");
     EXPECT_EQ(expected.Top(), 4);
     EXPECT_EQ(expected.Bottom(), 2);
     EXPECT_EQ(expected.Left(), 1);
     EXPECT_EQ(expected.Right(), 3);
 }
 
-TEST(Free, ParseRectangle_IncorrectNumberOfPoints_Throws)
+TEST(Free, ParseLand_IncorrectNumberOfPoints_Throws)
 {
-    auto expected = ParseRectangle("1 2 3 4");
+    auto expected = ParseLand("1 2 3 4");
     EXPECT_THROW({
        try
        {
-           ParseRectangle("1 2 3");
+           ParseLand("1 2 3");
        }
        catch( const ParseException& e )
        {
@@ -245,15 +245,15 @@ TEST(Free, ParseRectangle_IncorrectNumberOfPoints_Throws)
     }, ParseException );
 }
 
-TEST(Free, ParseRectangles_CorrectData_ReturnsSingleRectangle)
+TEST(Free, ParseLands_CorrectData_ReturnsSingleLand)
 {
-    auto expected = ParseRectangles("1 2 3 4");
+    auto expected = ParseAllLand("1 2 3 4");
     EXPECT_EQ(expected.size(), 1);
 }
 
-TEST(Free, ParseRectangles_CorrectData_ReturnsMultipleRectangles)
+TEST(Free, ParseLands_CorrectData_ReturnsMultipleLands)
 {
-    auto expected = ParseRectangles("1 2 3 4,5 6 7 8");
+    auto expected = ParseAllLand("1 2 3 4,5 6 7 8");
     EXPECT_EQ(expected.size(), 2);
 }
 

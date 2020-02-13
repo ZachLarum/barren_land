@@ -1,14 +1,14 @@
-#ifndef SRC__RECTANGLE_HPP
-#define SRC__RECTANGLE_HPP
+#ifndef SRC__LAND_HPP
+#define SRC__LAND_HPP
 
 #include "Point.hpp"
 
 namespace common
 {
-class Rectangle
+class Land
 {
 public:
-    Rectangle(Point corner1, Point corner2);
+    Land(Point corner1, Point corner2);
 
     int Top() const;
     int Bottom() const;

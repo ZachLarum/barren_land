@@ -3,5 +3,5 @@ add_executable(barren-land-calculator
     FarmLand.cpp
     InputParser.cpp
     Point.cpp
-    Rectangle.cpp
+    Land.cpp
 )
