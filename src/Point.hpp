@@ -1,7 +1,7 @@
 #ifndef SRC__POINT_HPP
 #define SRC__POINT_HPP
 
-#include <string>
+#include <sstream>
 
 namespace common
 {

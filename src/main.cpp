@@ -6,7 +6,6 @@
 #include "Point.hpp"
 
 #include <iostream>
-#include <sstream>
 #include <iterator>
 #include <vector>
 
@@ -15,13 +14,13 @@ namespace
 {
 void DisplayHelpMessage()
 {
-    std::cout << "Plots must consist of four integeres separated by a space.\n"
+    std::cout << "Plots must consist of four integers separated by a space.\n"
               << "The first pair corresponds to the bottom left of the plot.\n"
               << "The second pair corresponds to the top right of the plot.\n"
               << "Each plot must be separated by a comma.\n"
               << "Example\n"
               << "\t1 2 6 8, 0 0 5 6\n"
-              << "Press Enter when all points have been inputed.\n\n";
+              << "Press Enter when all points have been inputted.\n\n";
 }
 
 std::vector<common::Land> PromptUser()
@@ -72,10 +71,12 @@ int main(int argc, char** argv)
     {
         farm.AddBarrenPlot(plot);
     }
+
     if (params.printFarm)
     {
         farm.PrintFarm();
     }
+
     auto plots = farm.FertilePlots();
     PrintPlots(plots);
 }

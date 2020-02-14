@@ -1,4 +1,5 @@
 #include "InputParser.hpp"
+
 #include "Exception.hpp"
 #include "Land.hpp"
 #include "Parse.hpp"
@@ -6,7 +7,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <iterator>
 #include <sstream>
 #include <string>
 
