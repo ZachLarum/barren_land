@@ -72,37 +72,6 @@ set_target_properties(input-parser-unit-tests
 add_test(input-parser-unit-tests input-parser-unit-tests)
 
 ######################################
-# Parse Tests
-######################################
-add_executable(parse-unit-tests "")
-
-target_sources(parse-unit-tests
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/ParseTests.cpp
-)
-
-target_include_directories(parse-unit-tests
-    PRIVATE
-        ${PROJECT_SOURCE_DIR}/src
-)
-
-target_link_libraries(parse-unit-tests
-    PRIVATE
-        gtest
-        gtest_main
-        Threads::Threads
-)
-
-set_target_properties(parse-unit-tests
-    PROPERTIES
-        CXX_STANDARD 14
-        CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
-)
-
-add_test(parse-unit-tests parse-unit-tests)
-
-######################################
 # Land Tests
 ######################################
 add_executable(land-unit-tests "")
@@ -133,3 +102,34 @@ set_target_properties(land-unit-tests
 )
 
 add_test(land-unit-tests land-unit-tests)
+
+######################################
+# Parse Tests
+######################################
+add_executable(parse-unit-tests "")
+
+target_sources(parse-unit-tests
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/ParseTests.cpp
+)
+
+target_include_directories(parse-unit-tests
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
+)
+
+target_link_libraries(parse-unit-tests
+    PRIVATE
+        gtest
+        gtest_main
+        Threads::Threads
+)
+
+set_target_properties(parse-unit-tests
+    PROPERTIES
+        CXX_STANDARD 14
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+)
+
+add_test(parse-unit-tests parse-unit-tests)
