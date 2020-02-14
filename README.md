@@ -29,13 +29,13 @@ Output all the fertile land area in square meters, sorted from smallest area to 
         -p,--print  Print a visual representation of the farm where 1
                     is fertile land and 0 is infertile.
 ### Using the program
-Plots must consist of four integers separated by a space.
-The first pair corresponds to the bottom left of the plot.
-The second pair corresponds to the top right of the plot.
-Each plot must be separated by a comma.
-Example
-    1 2 6 8, 0 0 5 6
-Press Enter when all points have been inputted.
+    Plots must consist of four integers separated by a space.
+    The second pair corresponds to the top right of the plot.
+    The first pair corresponds to the bottom left of the plot.
+    Each plot must be separated by a comma.
+    Example
+        1 2 6 8, 0 0 5 6
+    Press Enter when all points have been inputted.
 
 
 
