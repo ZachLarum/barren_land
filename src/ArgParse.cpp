@@ -44,7 +44,7 @@ void ValidateArgs(const common::CmdParams& params)
         errMsg << "Please enter valid dimensions for the farm.\n";
         if(params.bottom >= params.top)
         {
-            errMsg << "The bottom of the farm must be less than the top value.\n"
+            errMsg << "The bottom value of the farm must be less than the top value.\n"
                    << "bottom: " << params.bottom << ", top: " << params.top << "\n";
         }
         if(params.left >= params.right)
