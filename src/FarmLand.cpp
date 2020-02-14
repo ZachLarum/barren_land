@@ -2,6 +2,7 @@
 #include "Exception.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <queue>
 #include <sstream>
 
@@ -53,9 +54,16 @@ std::vector<size_t> FarmLand::FertilePlots()
     return fertilePlots;
 }
 
-std::vector<std::vector<SoilStatus>> FarmLand::Land() const
+void FarmLand::PrintFarm() const
 {
-    return plots;
+    for(const auto& row : plots)
+    {
+        for(const auto& p : row)
+        {
+            std::cout << (p == common::SoilStatus::Fertile) << " ";
+        }
+        std::cout << "\n";
+    }
 }
 
 int FarmLand::Width() const
