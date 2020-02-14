@@ -16,6 +16,7 @@ Output all the fertile land area in square meters, sorted from smallest area to 
 
 
 ## Running Barren Land Analysis
+### Starting the program
     Usage: ./barren-land-calculator [OPTION]...
     Outputs fertile land areas of a farm in ascending order given barren land coordinates.
         -h,--help	Show this help message
@@ -27,6 +28,17 @@ Output all the fertile land area in square meters, sorted from smallest area to 
         -r,--right  Right side of the farm. Default is 399.
         -p,--print  Print a visual representation of the farm where 1
                     is fertile land and 0 is infertile.
+### Using the program
+Plots must consist of four integers separated by a space.
+The first pair corresponds to the bottom left of the plot.
+The second pair corresponds to the top right of the plot.
+Each plot must be separated by a comma.
+Example
+    1 2 6 8, 0 0 5 6
+Press Enter when all points have been inputted.
+
+
+
 
 ### Notes
 While the program build framework is CMake, cross-platform compilation is not available yet. It is currently compiled on a linux machine with gcc, g++, cmake, and gtest installed. gtest requires pthread.
