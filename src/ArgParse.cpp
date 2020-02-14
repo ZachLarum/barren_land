@@ -106,7 +106,6 @@ CmdParams ParseArgs(int argc, char ** argv)
 
     ValidateArgs(params);
 
-    // If an invalid or missing parameter occurs show usage and exit.
     if (showUsage)
     {
         Usage(argv[0]);

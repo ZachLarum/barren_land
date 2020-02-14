@@ -6,7 +6,6 @@
 #include "Point.hpp"
 
 #include <iostream>
-#include <sstream>
 #include <iterator>
 #include <vector>
 
@@ -72,10 +71,12 @@ int main(int argc, char** argv)
     {
         farm.AddBarrenPlot(plot);
     }
+
     if (params.printFarm)
     {
         farm.PrintFarm();
     }
+
     auto plots = farm.FertilePlots();
     PrintPlots(plots);
 }
