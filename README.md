@@ -16,6 +16,15 @@ Output all the fertile land area in square meters, sorted from smallest area to 
 
 
 ## Running Barren Land Analysis
+### Building the program
+The program is built with CMake. Navigate to the top level directory. Generate the CMake files, then build.
+
+    cmake -H./ -B./[build_dir]
+    cmake --build [build_dir]
+
+The executeable will be located in src/
+### Running the tests
+To run the units, navigate to the build directory and enter the command `ctest`
 ### Starting the program
     Usage: ./barren-land-calculator [OPTION]...
     Outputs fertile land areas of a farm in ascending order given barren land coordinates.
